@@ -56,27 +56,3 @@ export async function getStaticProps(context) {
   };
 }
 
-// export async function getStaticProps(context) {
-//   const id = context?.params.cat;
-//   const { allEvents } = await import("/data/data.json");
-//   const data = allEvents.filter((path) => path.city === id);
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }
-
-// export async function getStaticProps(context) {
-//   const id = context?.params.cat;
-//   const { allEvents } = await import("/data/data.json");
-
-//   const data = allEvents.filter((event) => event.city === id);
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }

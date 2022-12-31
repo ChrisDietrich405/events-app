@@ -1,21 +1,55 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 const SingleEvent = ({ data }) => {
-  
-  const onSubmit = () => {
+  const [message, setMessage] = useState("")
+  const inputEmail = useRef();
+  const router = useRouter()
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const emailValue = inputEmail.current.value
+    const eventId = router?.query.id
+    const validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
+
+    if(!emailValue.match(validEmail)) {
+      setMessage("enter valide email")
+    }
+
+    try {
+      const response = await fetch("/api/email-registration", 
+      { 
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({email: emailValue, eventId})
+      }) 
+
+      if(!response.ok) throw new Error(`error ${response.status}`)
+      setMessage(data.message)
+      const data = await response.json()
+      console.log(data)
     
+    } catch(e) {
+      console.log("Error", e)
+    }
   }
+  
 
   return (
     <div>
       <Image src={data.image} width={300} height={300} alt={data.title} />
       <h2>{data.title}</h2>
       <p>{data.description}</p>
-      <form onSubmit={onSubmit}>
-      <label for="reg">Register</label>
-      <input type="email" id="reg"  />
-      <button type="button">submit</button>
+      <form onSubmit={handleSubmit}>
+        <label for="reg">Register</label>
+        <input ref={inputEmail} id="reg" />
+        <button type="submit">submit</button>
       </form>
+      <h1>{message}</h1>
     </div>
   );
 };
